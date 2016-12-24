@@ -1,0 +1,18 @@
+{% extends 'user/base.html' %}
+{% load poetry_tags %}
+{% load crispy_forms_tags %}
+{% block title %}{% block og-title %}Қазақ поэзиясы — Профайлды жаңалау{% endblock %}{% endblock %}
+{% block description %}{% block og-description %}Қазақ поэзиясы — Профайлды жаңалау{% endblock %}{% endblock %}
+{% block cabinetblock %}
+	<h4>Профайлды жаңалау</h4>
+            {% if messages %}
+                {% for message in messages %}
+                <p class="text-success">{{ message }}</p>
+                {% endfor %}
+            {% endif %}
+	<form action="" method="post">{% csrf_token %}
+		{{ form|crispy }}
+		<input type="submit" class="btn btn-primary" value="Ок" />
+	</form>
+{% endblock cabinetblock %}
+

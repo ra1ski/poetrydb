@@ -1,0 +1,53 @@
+{% extends 'poetry/base.html' %}
+
+{% block title %}
+	{{contributor.full_name}}. Жеке парақша
+{% endblock title %}
+{% load poetry_tags %}
+{% block content %}
+	<h3>Жеке парақша</h3>
+	<div class="row">
+		<div class="col-md-5">
+			<div class="">
+				<h4>Инфо</h4>
+				<table class="table">
+					<tr>
+						<td>Аты жөні</td>
+						<td><a href="{% url 'user:user_home' contributor.user_id %}">{{contributor.full_name}}</a></td>
+					</tr>
+					<tr>
+						<td>#</td>
+						<td>{{contributor.user_id}}</td>
+					</tr>
+					<tr>
+						<td colspan="2">
+							{% if contributor.text_status|length > 0 %}
+									{{contributor.text_status|linebreaks}}
+							{% else %}
+								Қараңғы қазақ көгіне, <br>
+								өрмелеп шығып күн болам! <br>
+								Қараңғылықтың кегіне <br>
+								күн болмағанда, кім болам?
+							{% endif %}
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2"><a href="{% url 'user:user_all_poems' contributor.user_id %}">Барлық қосылған шығармалар</a></td>
+					</tr>
+					{% if user.is_authenticated and user.id == contributor.user_id %}
+					<tr>
+						<td colspan="2"><a href="{% url 'user:offer_poem' %}">Өлең ұсыну</a></td>
+					</tr>
+					<tr>
+						<td colspan="2"><a href="{% url 'user:edit_profile' user.id %}">Парақшаны өңдеу</a></td>
+					</tr>
+					{% endif %}
+				</table>
+			</div>
+			{% social_buttons %}
+		</div>
+		<div class="col-md-7">
+			{% block cabinetblock %}{% endblock cabinetblock %}
+		</div>
+	</div>
+{% endblock content %}

@@ -1,0 +1,27 @@
+{% load mathfilters %}
+<h2>{{page_title}}</h2>
+{% regroup poets by name.0 as poets_by_letter %} 
+{% with letters_length=poets_by_letter|length|div:column_nb|add:1 %}
+	{% if poets_by_letter|length %}
+		<div class="poets_list clearfix">
+				<ul class="list_column"> 
+				{% for letter in poets_by_letter %}
+				{% if forloop.counter|sub:1|mod:letters_length == 0 %}
+					</ul><ul class="list_column">
+				{% endif %}
+				  <li class="letter-li">
+				  <span class="list-letter"><a href="{% url 'poetry:letter' letter.grouper %}">{{ letter.grouper }}</a></span> 
+				    <ul class="list-for-letter">
+				        {% for poet in letter.list %}
+				        <li>
+							<a href="{% url 'poetry:poet' poet.id poet.slug %}">{{ poet.name }}</a>
+							<span class="items-count">({{poet.poems_count}})</span>
+				        </li>
+				        {% endfor %}
+				    </ul>
+				  </li>
+				{% endfor %}
+				</ul>   
+		</div>	
+	{% endif %}	
+{% endwith %}

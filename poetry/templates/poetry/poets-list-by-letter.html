@@ -1,0 +1,22 @@
+{% extends 'poetry/base.html' %}
+{% block title %}{% block og-title %}Қазақ поэзиясы — Авторлар тізімі — «{{letter}}» әріпі{% endblock %}{% endblock %}
+{% block description %}{% block og-description %}Қазақ поэзиясы — Авторлар тізімі — «{{letter}}» әріпі{% endblock %}{% endblock %}
+{% block content %}
+    <h2>"{{letter}}" тізімі: </h2>
+	
+	{% if poets|length %}
+	<ul class="standart-list">
+	    {% for poet in poets %}
+	    	<li>- <a href="{% url 'poetry:poet' poet.id poet.slug %}">{{ poet.name }}</a></li>
+	    {% endfor %}
+	</ul>
+	{% endif %}
+	<p> 
+		<br>
+		<script type="text/javascript" src="//yastatic.net/es5-shims/0.0.2/es5-shims.min.js" charset="utf-8"></script>
+		<script type="text/javascript" src="//yastatic.net/share2/share.js" charset="utf-8"></script>
+		<div class="ya-share2" data-services="vkontakte,facebook,odnoklassniki,moimir,gplus,whatsapp"></div>
+		<br>	
+	</p>  	
+{% endblock %}
+

@@ -1,0 +1,14 @@
+{% extends 'poetry/base.html' %}
+{% block title %}Қазақ поэзиясы. Ең көп қаралған 100{% endblock %}
+{% block content %}
+<h3>Ең көп қаралған 100</h3>
+<ol class="ol-li-menu">
+	{% for poem in poem_list %}
+		<li>
+			<a href="{% url 'poetry:poet' poem.author__id poem.author__slug %}">{{poem.name}}</a></span> —
+			<a href="{% url 'poetry:poem' poem.author__id poem.author__slug poem.id %}">"{{poem.title}}"</a>
+			<span class="items-count">({% if poem.view__views_count %}{{poem.view__views_count}}{% else %}0{% endif %})</span>
+		</li>
+	{% endfor%}
+</ol>
+{% endblock %}

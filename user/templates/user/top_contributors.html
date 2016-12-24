@@ -1,0 +1,16 @@
+{% extends 'poetry/base.html' %}
+{% block title %}{% block og-title %}Қазақ поэзиясы — Үздік қолданушылар {% endblock %}{% endblock %}
+{% block description %}{% block og-description %}Қазақ поэзиясы — Үздік қолданушылар {% endblock %}{% endblock %}
+{% load poetry_tags %}
+{% block content %}
+	<h3>Үздік қолданушылар</h3>
+	<div class="row">
+		<ul class="list_column">
+			{% for contributor in users %}
+				<li><a href="{% url 'user:user_home' contributor.id %}">{{contributor.contributor__full_name}}</a> <span class="items-count">({{contributor.poems_count}})</span></li>
+			{% endfor%}		
+		</ul>
+	</div>
+	<br>
+	{% social_buttons %}
+{% endblock content %}

@@ -1,0 +1,15 @@
+{% extends 'poetry/base.html' %}
+{% block title %}{% block og-title %}Қазақ поэзиясы — Тақырыптар тізімі — «{{theme.name}}»{% endblock %}{% endblock %}
+{% block description %}{% block og-description %}Қазақ поэзиясы — Тақырыптар тізімі — «{{theme.name}}»{% endblock %}{% endblock %}
+{% block content %}
+    <h2>"{{theme.name}}" туралы</h2>
+
+	<ul class="poet-poems-list">
+    {% for poem in poems %}
+    	<li>
+			\ <a href="{% url 'poetry:poem' poem.author_id poem.poem_poet.slug poem.id %}">{{ poem.title }}</a>
+    	</li>
+    {% endfor %}
+    </ul>
+{% endblock %}
+

@@ -1,0 +1,35 @@
+{% extends 'poetry/base.html' %}
+{% block title %}{% block og-title %}Қазақ поэзиясы — Тақырыптар тізімі{% endblock %}{% endblock %}
+{% block description %}{% block og-description %}Қазақ поэзиясы — Тақырыптар тізімі{% endblock %}{% endblock %}
+{% block content %}
+{% load poetry_tags %}
+{% load mathfilters %}
+    <h2>Тақырыптар тізімі</h2>
+
+	{% regroup object_list by name.0 as themes %} 
+	{% if themes|length %}
+		<div class="poets_list clearfix">
+			{% with letters_length=themes|length|intdiv:3|add:1 %}
+				<ul class="list_column"> 
+				{% for letter in themes %}
+				{% if forloop.counter|sub:1|mod:letters_length == 0 %}
+					</ul><ul class="list_column">
+				{% endif %}
+				  <li class="letter-li"><span class="list-letter">{{ letter.grouper }}</span> 
+				    <ul class="list-for-letter">
+				        {% for theme in letter.list %}
+				        <li>
+							<a href="{% url 'poetry:themes_detail' theme.id %}">{{theme.name}}</a>
+							<span class="items-count">({{theme.poems_count}})</span>
+				        </li>
+				        {% endfor %}
+				    </ul>
+				  </li>
+				{% endfor %}
+				</ul>    
+			{% endwith %}
+		</div>
+	{% endif %}
+	{% social_buttons %}
+{% endblock %}
+

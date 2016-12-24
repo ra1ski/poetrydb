@@ -1,0 +1,13 @@
+{% extends 'poetry/base.html' %}
+{% block title %}Қазақ поэзиясы. Соңғы қосылымдар{% endblock %}
+{% block content %}
+<h3>Соңғы қосылымдар</h3>
+<ol class="ol-li-menu">
+	{% for poem in poem_list %}
+		<li>
+			<a href="{% url 'poetry:poet' poem.author__id poem.author__slug %}">{{poem.author__name}}</a> —
+			<a href="{% url 'poetry:poem' poem.author__id poem.author__slug poem.id %}">"{{poem.title}}"</a>
+		</li>
+	{% endfor%}
+</ol>
+{% endblock %}

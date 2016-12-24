@@ -1,0 +1,173 @@
+# -*- coding: utf-8 -*-
+from django.db.models import Count
+from django.http import Http404
+from django.shortcuts import render
+from django.views import generic
+from django.shortcuts import render
+from .models import Poet, Poem, View, Theme, Age
+from .helpers import get_slug_data_for_letter
+
+
+class HomeView(generic.View):
+    template_name = 'poetry/home.html'
+
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name)
+
+
+class IndexView(generic.View):
+    template_name = 'poetry/index.html'
+
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name)
+
+
+class PoetDetailView(generic.DetailView):
+    model = Poet
+
+
+class PoetTopView(generic.DetailView):
+    model = Poet
+    template_name = 'poetry/poet_top.html'
+
+
+class PoetAboutView(generic.DetailView):
+    model = Poet
+    template_name = 'poetry/poet-about.html'
+
+
+class LetterDetailView(generic.View):
+    template_name = 'poetry/poets-list-by-letter.html'
+
+    def get(self, request, letter_id):
+        slug_data = get_slug_data_for_letter()
+
+        try:
+            poets = Poet.objects.filter(letter = slug_data[letter_id.lower()], is_active = 1).order_by('name')
+        except Poet.ObjectDoesNotExist:
+            raise Http404("Poll does not exist")
+
+        return render(request, self.template_name, {'poets': poets, 'letter': letter_id})
+
+
+class PoemDetailView(generic.DetailView):
+    model = Poem
+    template_name = 'poetry/poem-detail.html'
+
+    def get(self, request, poet_id, slug_id, id):
+        try:
+            poem = Poem.objects.get(id = id, author_id = poet_id)
+
+            if poem.is_shown == 0 and (not request.user or request.user.id != poem.added_user_id):
+                raise Http404('Page not found')
+        except Poem.DoesNotExist:
+            raise Http404('Page not found')
+
+        view, created = View.objects.get_or_create(poem_id = poem.id)
+        view.views_count = view.views_count + 1
+        view.save()
+        poet = Poet.objects.get(id = poet_id)
+
+        return render(request, self.template_name, {
+            'poem': poem,
+            'poet': poet,
+        })
+
+
+class ThemesView(generic.ListView):
+    model = Theme
+
+    def get_queryset(self):
+        # return (Theme.objects
+        #         .filter(poem__isnull = True)
+        #         .values('id', 'name')
+        #         .order_by('name')
+        #         .annotate(Count("id"), poems_count = Count('poem__id')))
+        return Theme.objects.raw('''
+            SELECT
+                pt.id as id, pt.name as name, count(pm.id) as poems_count
+            FROM
+                poetry_theme as pt
+            LEFT JOIN poetry_poem_theme as ppt ON pt.id=ppt.theme_id
+            LEFT JOIN poetry_poem as pm ON ppt.poem_id=pm.id AND pm.is_shown=1
+            GROUP BY pt.id
+            ORDER BY pt.name
+		''')
+
+
+class ThemesDetailView(generic.DetailView):
+    model = Theme
+    template_name = 'poetry/theme_detail_list.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(ThemesDetailView, self).get_context_data(**kwargs)
+        context['poems'] = Poem.objects.filter(theme__id = self.get_object().id, is_shown = 1)
+
+        return context
+
+
+class AgeDetailView(generic.DetailView):
+    model = Age
+
+
+class GenderListView(generic.ListView):
+    model = Poet
+    template_name = 'poetry/gender_list.html'
+    gender_list = {
+        'er-adam': {
+            'id': 1,
+            'label': 'Ер ақын',
+        },
+        'aiel-adam': {
+            'id': 2,
+            'label': 'Әйел ақын',
+        },
+    }
+
+    def get(self, request, gender_id):
+        gender = self.gender_list[gender_id]
+        poets = (Poet.objects
+                 .filter(sex = gender['id'])
+                 .values('id', 'name', 'slug')
+                 .annotate(Count("id"), poems_count = Count('poem__id'))
+                 .order_by('name'))
+
+        return render(request, self.template_name, {
+            'gender': gender['label'],
+            'poets': poets
+        })
+
+
+class PoemsTopView(generic.ListView):
+    model = Poem
+    template_name = 'poetry/poems/top.html'
+
+    def get_queryset(self):
+        return (Poem.objects
+                .filter(is_shown = 1)
+                .values(
+                    'id',
+                    'title',
+                    'author__id',
+                    'author__name',
+                    'author__slug',
+                    'view__views_count')
+                .order_by('-created_at')[:100])
+
+
+class PoemsLastView(generic.ListView):
+    model = Poem
+    template_name = 'poetry/poems/last.html'
+
+    def get_queryset(self):
+        return (Poem.objects
+                .filter(
+                    is_shown = 1,
+                    author__is_active = 1)
+                .values(
+                    'id',
+                    'title',
+                    'author__id',
+                    'author__name',
+                    'author__slug')
+                .order_by('-created_at')[:100])

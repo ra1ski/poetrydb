@@ -1,0 +1,9 @@
+{% extends 'poetry/base.html' %}
+{% block title %}{% block og-title %}{{page.title}} — Қазақ поэзиясы. {% endblock %}{% endblock %}
+{% block description %}{% block og-description %}{{page.title}} — Қазақ поэзиясы. {% endblock %}{% endblock %}
+{% load poetry_tags %}
+{% block content %}
+	<h2>{{page.title}}</h2>
+	<div>{{page.content|safe}}</div>
+	{% social_buttons %}
+{% endblock %}

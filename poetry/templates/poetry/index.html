@@ -1,0 +1,8 @@
+{% extends 'poetry/base.html' %}
+{% block title %}{% block og-title %}Қазақ поэзиясы — Авторлар тізімі{% endblock %}{% endblock %}
+{% block description %}{% block og-description %}Қазақ поэзиясы — Авторлар тізімі{% endblock %}{% endblock %}
+{% load poetry_tags %}
+{% block content %}
+	{% poets_list_alphabetical 3 %}
+	{% social_buttons %}
+{% endblock %}

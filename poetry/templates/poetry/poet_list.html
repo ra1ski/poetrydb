@@ -1,0 +1,6 @@
+{% extends 'poetry/base.html' %}
+{% block title %}{% block og-title %}Қазақ поэзиясы — Авторлар тізімі{% endblock %}{% endblock %}
+{% block description %}{% block og-description %}Қазақ поэзиясы — Авторлар тізімі{% endblock %}{% endblock %}
+{% block content %}
+	{% include "poetry/blocks/_poets_list.html" with page_title=gender poets=poets %}
+{% endblock %}

@@ -1,0 +1,32 @@
+{% extends 'poetry/base.html' %}
+{% block title %}{% block og-title %}Қазақ поэзиясы — {{poet.name}} шығармалары{% endblock %}{% endblock %}
+{% block description %}{% block og-description %}Қазақ поэзиясы — {{poet.name}} шығармалары{% endblock %}{% endblock %}
+{% load poetry_tags %}
+{% block content %}
+	<div class="row">
+		<h2>{{poet.name}}</h2>
+	</div>
+	<div class="row">
+		<div class="col-md-4">
+			<h3>Инфо</h3>
+			<table class="table">
+				<tr>
+					<td><a href="{% url 'poetry:poet' poet.id poet.slug %}">Шығармалар</a></td>
+				</tr>
+				<tr>
+					<td><a href="{% url 'poetry:poet_about' poet.id poet.slug %}">Өмірбаяны</a></td>
+				</tr>
+				<tr>
+					<td><a href="{% url 'poetry:poet_top' poet.id poet.slug %}">Ең көп қаралған шығармалары</a></td>
+				</tr>			
+			</table>
+        {% social_buttons %}
+		</div>
+		<div class="col-md-8">
+			{% block poetblock %}
+			{% endblock %}
+		</div>
+	</div>
+
+{% endblock %}
+

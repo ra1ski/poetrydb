@@ -1,0 +1,63 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Қазақ поэзисының жинағы.{% endblock title %}</title>
+    <meta name="description" content="{% block description %}Қазақ поэзисының жинағы.{% endblock description %}">
+    <meta property="og:title" content="{% block og-title %}Қазақ поэзисының жинағы.{% endblock og-title %}" />
+    <meta property="og:description" content="{% block og-description %}Қазақ поэзисының жинағы.{% endblock og-description %}" />
+    <meta property="og:image" content="http://poetrydb.rawanski.com/static/poetry/img/og-image-temp.jpg" />
+
+    {% block styling %}
+        <link rel="stylesheet" type="text/css" href="{% static 'css/vendor/bootstrap-theme.min.css' %}" />
+        <link rel="stylesheet" type="text/css" href="{% static 'css/vendor/bootstrap.min.css' %}" />
+        <link rel="stylesheet" type="text/css" href="{% static 'poetry/styles.css' %}" />        
+    {% endblock styling %}    
+</head>
+<body> 
+    <!-- Fixed navbar -->
+    <nav class="navbar navbar-default navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="/">Poetry DB:Beta</a>
+        </div>
+        {% include "poetry/blocks/_menu.html" %}
+      </div>
+    </nav>
+    {% load poetry_tags %}
+    <!-- Begin page content -->
+    <div class="container">
+    	<div class="col-md-3">
+            <div class="well age-menu">
+                {% age_menu %}
+            </div>  
+            <div class="last-added-poems-widget well">
+                {% last_added_poems %}
+            </div>
+            <div class="top-poems-widget well">
+                {% top_poems %}
+            </div>            
+        </div>
+        <div class="col-md-9">
+        {% poets_list_alphabetical 2 %}       
+        </div>
+    </div>
+
+    <footer class="footer">
+      <div class="container">
+        <p class="text-muted">Қазақ поэзиясы Db:beta</p>
+      </div>
+    </footer>
+    {% block javascript %}
+        <script src="{% static 'js/vendors/jquery.min.js' %}"></script>
+        <script src="{% static 'js/vendors/bootstrap.min.js' %}"></script>
+    {% endblock javascript %}      
+</body>
+</html>

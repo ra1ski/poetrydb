@@ -1,0 +1,27 @@
+{% extends "poetry/base.html" %}
+{% load crispy_forms_tags %}
+{% block title %}{% block og-title %}Қазақ поэзиясы — Кіру{% endblock %}{% endblock %}
+{% block description %}{% block og-description %}Қазақ поэзиясы — Кіру{% endblock %}{% endblock %}
+{% block content %}
+    <div class="col-sm-6">
+        <fieldset>
+            <h3>Кіру</h3>
+            {% if messages %}
+                {% for message in messages %}
+                <p class="text-warning">{{ message }}</p>
+                {% endfor %}
+            {% endif %}
+			{% if form.errors %}
+				<p class="text-warning">Email немесе құпиясөз қате терілген. Тағыда қайталап көріңіз</p>
+			{% endif %}
+            <div class="panel-body">
+				<form role="form" class="form-horizontal" method="post" action="{% url 'user:user_login' %}">
+					{% csrf_token %}
+					{{ form|crispy }}
+					<input class="btn btn-primary" type="submit" value="Кіру" />
+					<input type="hidden" name="next" value="{{ next }}" />
+				</form>
+            </div>
+        </fieldset>
+    </div>
+{% endblock content %}

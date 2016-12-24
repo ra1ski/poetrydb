@@ -1,0 +1,10 @@
+{% extends 'poetry/base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}{% block og-title %}Қазақ поэзиясы — Құптау парақшасы{% endblock %}{% endblock %}
+{% block description %}{% block og-description %}Қазақ поэзиясы — Құптау парақшасы{% endblock %}{% endblock %}
+{% block content %}
+	<h4>Құптау парақшасы</h4>
+    <div class="col-md-8">
+		<p class="alert {{ css_class }}">{{message}}</p>
+    </div>
+{% endblock content %}

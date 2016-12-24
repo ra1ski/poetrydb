@@ -1,0 +1,8 @@
+<p class="widget-title">Соңғы шығармалар</p>
+<ol class="ol-li-menu">
+	{% for poem in poems %}
+		<li><a href="{% url 'poetry:poem' poem.poet_id poem.slug poem.id %}">{{poem.title}}</a> <br>{{poem.poet_name}}</li>
+	{% endfor%}
+</ol>
+<br>
+<p><a href="{% url 'poetry:poems_last'%}">Соңғы қосылымдар</a></p>

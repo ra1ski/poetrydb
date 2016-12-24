@@ -1,0 +1,12 @@
+<p class="widget-title">Ең көп қаралған</p>
+<ol class="ol-li-menu">
+	{% for poem in poems %}
+    <li>
+        <a href="{% url 'poetry:poem' poem.poet_id poem.slug poem.id %}">{{poem.title}}</a>
+        <span class="items-count">({% if poem.views_count %}{{poem.views_count}}{% else %}0{% endif %})</span>
+        <br>{{poem.name}}
+    </li>
+	{% endfor%}
+</ol>
+<br>
+<p><a href="{% url 'poetry:poems_top_100' %}">Ең көп қаралған 100</a></p>

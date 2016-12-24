@@ -1,0 +1,13 @@
+{% extends 'user/base.html' %}
+{% load poetry_tags %}
+{% block title %}{% block og-title %}Қазақ поэзиясы — {{contributor.full_name}} жеке парақшасы{% endblock %}{% endblock %}
+{% block description %}{% block og-description %}Қазақ поэзиясы — {{contributor.full_name}} жеке парақшасы.{% endblock %}{% endblock %}
+{% block cabinetblock %}
+	{% if messages %}
+		{% for message in messages %}
+		<p class="text-success">{{ message }}</p>
+		{% endfor %}
+	{% endif %}
+	<h4>Соңғы қосылған шығармалар</h4>
+	{% get_user_poems_list user contributor.user_id 10 %}
+{% endblock cabinetblock %}

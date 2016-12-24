@@ -1,0 +1,13 @@
+{% extends 'poetry/poet-page.html' %}
+{% block title %}{% block og-title %}Қазақ поэзиясы — {{poem.author.name}} — «{{poem.title}}»{% endblock %}{% endblock %}
+{% block description %}{% block og-description %}Қазақ поэзиясы — {{poem.author.name}} — «{{poem.title}}»{% endblock %}{% endblock %}
+{% block poetblock %}
+    {% if not poem.is_shown %}
+        <p class="text-danger">Бұл шығарма модерацияда, қазір тек сіз үшін ашық</p>
+    {% endif %}
+	<h3>{{poem.title}}</h3>
+    <div class="poem-content">
+		{{poem.content|linebreaks}}
+    </div> 
+{% endblock poetblock %}
+

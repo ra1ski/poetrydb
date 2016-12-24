@@ -1,0 +1,8 @@
+{% extends 'user/base.html' %}
+{% load poetry_tags %}
+{% block title %}{% block og-title %}Қазақ поэзиясы — {{contributor.full_name}} жеке парақшасы — Барлық қосылған шығармалар.{% endblock %}{% endblock %}
+{% block description %}{% block og-description %}Қазақ поэзиясы — {{contributor.full_name}} жеке парақшасы — Барлық қосылған шығармалар.{% endblock %}{% endblock %}
+{% block cabinetblock %}
+	<h4>Барлық қосқан шығармалары</h4>
+	{% get_user_poems_list user contributor.id 100 %}
+{% endblock cabinetblock %}

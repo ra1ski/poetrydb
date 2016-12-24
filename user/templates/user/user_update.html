@@ -1,0 +1,20 @@
+{% extends 'poetry/base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}{% block og-title %}Қазақ поэзиясы — Аккаунты өңдеу {% endblock %}{% endblock %}
+{% block description %}{% block og-description %}Қазақ поэзиясы — Аккаунты өңдеу{% endblock %}{% endblock %}
+{% block content %}
+    <div class="well col-sm-6">
+        <fieldset>
+            <legend>
+                Аккаунты өңдеу
+            </legend>
+            <div class="panel-body">
+                <form action="" method="post">
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                    <p><input type="submit" class="btn btn-lg btn-primary btn-block" value="Go!" /></p>
+                </form>
+            </div>
+        </fieldset>
+    </div>
+{% endblock content %}

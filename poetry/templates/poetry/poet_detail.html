@@ -1,0 +1,14 @@
+{% extends 'poetry/poet-page.html' %}
+{% block title %}{% block og-title %}Қазақ поэзиясы — {{poet.name}} шығармалары{% endblock %}{% endblock %}
+{% block description %}{% block og-description %}Қазақ поэзиясы — {{poet.name}} шығармалары{% endblock %}{% endblock %}
+{% block poetblock %}
+	<h3>Шығармалар</h3>
+	<ul class="poet-poems-list">
+    {% for poem in poet.poems %}
+    	<li>
+			\ <a href="{% url 'poetry:poem' poet.id poet.slug poem.id %}">{{ poem.title }}</a>
+    	</li>
+    {% endfor %}
+    </ul>
+{% endblock poetblock %}
+

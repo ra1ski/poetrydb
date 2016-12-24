@@ -1,0 +1,9 @@
+{% extends 'poetry/poet-page.html' %}
+{% block title %}{% block og-title %}Қазақ поэзиясы — {{poet.name}} өмірбаяны.{% endblock %}{% endblock %}
+{% block description %}{% block og-description %}Қазақ поэзиясы — {{poet.name}} өмірбаяны.{% endblock %}{% endblock %}
+{% block poetblock %}
+	<h3>Өмірбаян</h3>
+	<div>
+		{{poet.about|safe}}
+	</div>
+{% endblock poetblock %}

@@ -1,0 +1,8 @@
+<p class="widget-title">Бөлімдер</p>
+<ul class="li-menu">
+	{% for age in ages %}
+		<li>\ <a href="{% url 'poetry:age_detail' age.id %}">{{age.name}}</a></li>
+	{% endfor%}
+	<li>\ <a href="{% url 'poetry:gender_list' 'er-adam' %}">Ер ақын</a></li>
+	<li>\ <a href="{% url 'poetry:gender_list' 'aiel-adam' %}">Әйел ақын</a></li>
+</ul>
