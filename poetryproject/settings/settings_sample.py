@@ -22,6 +22,11 @@ DATABASES = {
     }
 }
 
+STATIC_ROOT = os.path.join(BASE_DIR, "../static")
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),
+]
+
 LANGUAGE_CODE = 'en-En'
 EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
 EMAIL_FILE_PATH = '/tmp/email-messages/'

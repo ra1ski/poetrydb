@@ -9,9 +9,9 @@
     <meta property="og:description" content="{% block og-description %}Қазақ поэзисының жинағы.{% endblock og-description %}" />
     <meta property="og:image" content="http://poetrydb.rawanski.com/static/poetry/img/og-image-temp.jpg" />
     {% block styling %}
-        <link rel="stylesheet" type="text/css" href="{% static 'css/vendor/bootstrap-theme.min.css' %}" />
-        <link rel="stylesheet" type="text/css" href="{% static 'css/vendor/bootstrap.min.css' %}" />
-        <link rel="stylesheet" type="text/css" href="{% static 'poetry/styles.css' %}" />        
+        <link rel="stylesheet" type="text/css" href="{% static 'poetry/css/vendor/bootstrap-theme.min.css' %}" />
+        <link rel="stylesheet" type="text/css" href="{% static 'poetry/css/vendor/bootstrap.min.css' %}" />
+        <link rel="stylesheet" type="text/css" href="{% static 'poetry/css/styles.css' %}" />
     {% endblock styling %}    
 </head>
 <body> 
@@ -61,8 +61,8 @@
     </footer>
 
     {% block javascript %}
-        <script src="{% static 'js/vendors/jquery.min.js' %}"></script>
-        <script src="{% static 'js/vendors/bootstrap.min.js' %}"></script>
+        <script src="{% static 'poetry/js/vendor/jquery.min.js' %}"></script>
+        <script src="{% static 'poetry/js/vendor/bootstrap.min.js' %}"></script>
     {% endblock javascript %}    
 </body>
 </html>
