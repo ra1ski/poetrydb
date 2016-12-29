@@ -8,18 +8,8 @@ from .models import Poet, Poem, View, Theme, Age
 from .helpers import get_slug_data_for_letter
 
 
-class HomeView(generic.View):
-    template_name = 'poetry/home.html'
-
-    def get(self, request, *args, **kwargs):
-        return render(request, self.template_name)
-
-
-class IndexView(generic.View):
+class IndexView(generic.TemplateView):
     template_name = 'poetry/index.html'
-
-    def get(self, request, *args, **kwargs):
-        return render(request, self.template_name)
 
 
 class PoetDetailView(generic.DetailView):
@@ -33,7 +23,7 @@ class PoetTopView(generic.DetailView):
 
 class PoetAboutView(generic.DetailView):
     model = Poet
-    template_name = 'poetry/poet-about.html'
+    template_name = 'poetry/poet_about.html'
 
 
 class LetterDetailView(generic.View):
