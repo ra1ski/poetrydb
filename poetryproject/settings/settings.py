@@ -119,9 +119,11 @@ STATICFILES_DIRS = [
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
 LOGIN_URL  = 'user:user_login'
 LOGOUT_URL = 'user:user_logout'
-# LOGIN_REDIRECT_URL = 'user:user_home'
 
 # Custon settings
 TINYMCE_DEFAULT_CONFIG = {
     'theme' : 'advanced',
 }
+INTERNAL_IPS = [
+    '127.0.0.1',
+]
