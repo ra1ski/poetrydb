@@ -1,7 +1,7 @@
 <p class="widget-title">Соңғы шығармалар</p>
 <ol class="ol-li-menu">
 	{% for poem in poems %}
-		<li><a href="{% url 'poetry:poem' poem.poet_id poem.slug poem.id %}">{{poem.title}}</a> <br>{{poem.poet_name}}</li>
+		<li><a href="{% url 'poetry:poem' poem.author__id poem.author__slug poem.id %}">{{poem.title}}</a> <br>{{poem.author__name}}</li>
 	{% endfor%}
 </ol>
 <br>

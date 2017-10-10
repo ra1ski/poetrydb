@@ -2,10 +2,10 @@
 {% for poem in poems %}
 	<li>
 		{% if poem.is_shown == 1 %}
-			<a href="{% url 'poetry:poem' poem.poet_id poem.slug poem.id %}">{{poem.title}}</a>
+			<a href="{% url 'poetry:poem' poem.author__id poem.author__slug poem.id %}">{{poem.title}}</a>
 		{% else %}
 			{% if user.is_authenticated and user.id = user_id %}
-				<a href="{% url 'poetry:poem' poem.poet_id poem.slug poem.id %}">{{poem.title}}</a> (модерация)
+				<a href="{% url 'poetry:poem' poem.author__id poem.author__slug poem.id %}">{{poem.title}}</a> (модерация)
 			{% else %}
 				{{poem.title}} (модерация)
 			{% endif %}

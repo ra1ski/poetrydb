@@ -1,4 +1,5 @@
 from django import template
+from django.db import models
 from poetry.models import Age, Poem, Poet
 
 register = template.Library()
@@ -13,66 +14,40 @@ def age_menu():
 
 @register.inclusion_tag('poetry/blocks/_last_added.html')
 def last_added_poems():
-    poems = Poet.objects.raw('''
-		SELECT
-			poem.id, poem.title, poet.id as poet_id, poet.slug, poet.name as poet_name
-		FROM
-			poetry_poem as poem
-		LEFT JOIN poetry_poet as poet ON poet.id=poem.author_id
-		WHERE poet.is_active=1 AND poem.is_shown=1
-		ORDER BY poem.created_at DESC
-		LIMIT 10
-	''')
+    poems = (Poem.objects
+             .filter(is_shown=1, author__is_active=1)
+             .values('id', 'title', 'author__id', 'author__slug', 'author__name')
+             .order_by('-created_at')[:10])
 
     return {'poems': poems}
 
 
 @register.inclusion_tag('poetry/blocks/_top_poems.html')
 def top_poems():
-    poems = Poem.objects.raw('''
-			SELECT 
-				poem.id, poem.title, views.views_count, poet.name, poet.slug, poet.id as poet_id
-			FROM 
-				poetry_poem as poem
-			LEFT JOIN poetry_view as views ON poem.id=views.poem_id
-			LEFT JOIN poetry_poet as poet ON poet.id=poem.author_id
-			WHERE poet.is_active=1 AND poem.is_shown=1
-			ORDER BY views.views_count DESC
-			LIMIT 10
-		''')
+    poems = (Poem.objects
+             .filter(is_shown=1, author__is_active=1)
+             .values('id', 'title', 'author__id', 'author__slug', 'author__name', 'view__views_count')
+             .order_by('-view__views_count')[:10])
 
     return {'poems': poems}
 
 
 @register.inclusion_tag('poetry/blocks/_poets_list.html')
 def poets_list_alphabetical(column_nb):
-    # poets = Poet.objects.filter(is_active=1)
-    poets = Poet.objects.raw('''
-		SELECT 
-			poet.id, poet.name, poet.slug, COUNT(poem.id) as poems_count
-		FROM 
-			poetry_poet as poet
-		LEFT JOIN poetry_poem as poem ON poet.id=poem.author_id AND poem.is_shown=1
-		WHERE poet.is_active=1
-		GROUP BY poet.id
-		ORDER BY poet.name
-	''')
+    poets = (Poet.objects
+             .filter(is_active=1)
+             .values('id', 'name', 'slug')
+             .annotate(poems_count=models.Count(models.Case(models.When(poem__is_shown=1, then=1)))))
 
     return {'poets': poets, 'column_nb': column_nb}
 
 
 @register.inclusion_tag('poetry/blocks/_user_poems_list.html')
 def get_user_poems_list(user, user_id, limit):
-    poems = Poem.objects.raw('''
-		SELECT 
-			poem.id, poem.title, poet.name, poet.slug, poet.id as poet_id, poem.is_shown
-		FROM 
-			poetry_poem as poem
-		LEFT JOIN poetry_poet as poet ON poet.id=poem.author_id
-		WHERE poem.added_user_id=%s
-		ORDER BY poem.created_at DESC
-		LIMIT %s
-	''', [user_id, limit])
+    poems = (Poem.objects
+             .filter(added_user=1)
+             .values('id', 'title', 'author__name', 'author__slug', 'author__id', 'is_shown')
+             .order_by('-created_at'))[:limit]
 
     return {'user': user, 'poems': poems, 'user_id': user_id}
 

@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
-from django.db.models import Count
+from django.db import models
 from django.http import Http404
-from django.shortcuts import render
 from django.views import generic
 from django.shortcuts import render
 from .models import Poet, Poem, View, Theme, Age
@@ -68,21 +67,9 @@ class ThemesView(generic.ListView):
     model = Theme
 
     def get_queryset(self):
-        # return (Theme.objects
-        #         .filter(poem__isnull = True)
-        #         .values('id', 'name')
-        #         .order_by('name')
-        #         .annotate(Count("id"), poems_count = Count('poem__id')))
-        return Theme.objects.raw('''
-            SELECT
-                pt.id as id, pt.name as name, count(pm.id) as poems_count
-            FROM
-                poetry_theme as pt
-            LEFT JOIN poetry_poem_theme as ppt ON pt.id=ppt.theme_id
-            LEFT JOIN poetry_poem as pm ON ppt.poem_id=pm.id AND pm.is_shown=1
-            GROUP BY pt.id
-            ORDER BY pt.name
-		''')
+        return (Theme.objects
+                .values('id', 'name')
+                .annotate(poems_count=models.Count(models.Case(models.When(poem__is_shown=1, then=1)))))
 
 
 class ThemesDetailView(generic.DetailView):
@@ -119,7 +106,7 @@ class GenderListView(generic.ListView):
         poets = (Poet.objects
                  .filter(sex=gender['id'])
                  .values('id', 'name', 'slug')
-                 .annotate(Count("id"), poems_count=Count('poem__id'))
+                 .annotate(models.Count("id"), poems_count=models.Count('poem__id'))
                  .order_by('name'))
 
         return render(request, self.template_name, {
@@ -135,13 +122,7 @@ class PoemsTopView(generic.ListView):
     def get_queryset(self):
         return (Poem.objects
                 .filter(is_shown=1)
-                .values(
-            'id',
-            'title',
-            'author__id',
-            'author__name',
-            'author__slug',
-            'view__views_count')
+                .values('id', 'title', 'author__id', 'author__name', 'author__slug', 'view__views_count')
                 .order_by('-created_at')[:100])
 
 
@@ -151,13 +132,6 @@ class PoemsLastView(generic.ListView):
 
     def get_queryset(self):
         return (Poem.objects
-                .filter(
-            is_shown=1,
-            author__is_active=1)
-                .values(
-            'id',
-            'title',
-            'author__id',
-            'author__name',
-            'author__slug')
+                .filter(is_shown=1, author__is_active=1)
+                .values('id', 'title', 'author__id', 'author__name', 'author__slug')
                 .order_by('-created_at')[:100])

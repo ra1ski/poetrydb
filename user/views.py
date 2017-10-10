@@ -34,7 +34,7 @@ class SignUpView(generic.View):
             to = [user.email]
             from_email = settings.EMAIL_HOST_USER
             url = request.build_absolute_uri(
-                reverse('user:user_activate', args = [user.id, user.contributor.activation_code]))
+                reverse('user:user_activate', args=[user.id, user.contributor.activation_code]))
 
             ctx = {
                 'url': url,
@@ -42,7 +42,7 @@ class SignUpView(generic.View):
             }
 
             message = get_template('user/auth/activation_email.html').render(ctx)
-            msg = EmailMessage(subject, message, to = to, from_email = from_email)
+            msg = EmailMessage(subject, message, to=to, from_email=from_email)
             msg.content_subtype = 'html'
             msg.send()
 
@@ -60,7 +60,7 @@ class IndexView(generic.View):
     template_name = "user/index.html"
 
     def get(self, request, *args, **kwargs):
-        contributor = Contributor.objects.filter(user_id = kwargs.get('pk'), user__is_active = 1).get()
+        contributor = Contributor.objects.filter(user_id=kwargs.get('pk'), user__is_active=1).get()
 
         return render(request, self.template_name, {
             'contributor': contributor
@@ -83,13 +83,13 @@ class LoginView(generic.View):
             email = form.cleaned_data['email']
             password = form.cleaned_data['password']
 
-            auth_user = authenticate(username = email, password = password)
+            auth_user = authenticate(username=email, password=password)
 
             if auth_user is not None:
                 if auth_user.is_active:
                     login(request, auth_user)
 
-                    return redirect(reverse('user:user_home', args = [auth_user.id]))
+                    return redirect(reverse('user:user_home', args=[auth_user.id]))
                 else:
                     messages.info(request, 'Сіздің аккаунтыңыз активациядан өтпеді.')
             else:
@@ -111,7 +111,7 @@ class ActivateView(generic.View):
         message = ''
         css_class = 'alert-success'
 
-        contributor = Contributor.objects.filter(user_id = user_id).get()
+        contributor = Contributor.objects.filter(user_id=user_id).get()
 
         if contributor.activation_code != '' and contributor.user.is_active == 0:
             if contributor.activation_code != activation_code:
@@ -137,7 +137,7 @@ class AllPoemsView(generic.View):
     template_name = 'user/all_added_poems.html'
 
     def get(self, request, *args, **kwargs):
-        contributor = Contributor.objects.filter(user_id = kwargs.get('pk'), user__is_active = 1).get()
+        contributor = Contributor.objects.filter(user_id=kwargs.get('pk'), user__is_active=1).get()
 
         return render(request, self.template_name, {
             'contributor': contributor
@@ -169,16 +169,16 @@ class EditUserView(SuccessMessageMixin, UpdateView):
     form_class = userforms.UserEditForm
     success_message = 'Жеке ақпаратыңыз сәтті түрде оңделді. =)'
 
-    def get_object(self, queryset = None):
+    def get_object(self, queryset=None):
         if int(self.request.user.id) != int(self.kwargs['pk']):
             raise Http404("Сіз тек өз аккаунтыңызды өңдей аласыз")
 
-        obj = Contributor.objects.get(user_id = self.request.user)
+        obj = Contributor.objects.get(user_id=self.request.user)
 
         return obj
 
     def get_success_url(self):
-        return reverse_lazy('user:edit_profile', args = [self.kwargs.get('pk')])
+        return reverse_lazy('user:edit_profile', args=[self.kwargs.get('pk')])
 
 
 class TopContributors(generic.View):
