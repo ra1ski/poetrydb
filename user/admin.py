@@ -4,7 +4,7 @@ from . import models
 
 
 class ContributorForm(forms.ModelForm):
-    text_status = forms.CharField(widget = forms.Textarea(attrs = {'rows': 5, 'cols': 100}))
+    text_status = forms.CharField(widget=forms.Textarea(attrs={'rows': 5, 'cols': 100}))
 
     class Meta:
         model = models.Contributor

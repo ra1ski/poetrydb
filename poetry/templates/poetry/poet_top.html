@@ -7,7 +7,7 @@
     {% for poem in poet.poems_top %}
     	<li>
 			\ <a href="{% url 'poetry:poem' poet.id poet.slug poem.id %}">{{ poem.title }}</a>
-			<span class="items-count">({% if poem.views_count %}{{poem.views_count}}{% else %}0{% endif %})</span>
+			<span class="items-count">({% if poem.view__views_count %}{{poem.view__views_count}}{% else %}0{% endif %})</span>
     	</li>
     {% endfor %}
     </ul>

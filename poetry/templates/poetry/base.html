@@ -12,9 +12,9 @@
         <link rel="stylesheet" type="text/css" href="{% static 'poetry/css/vendor/bootstrap-theme.min.css' %}" />
         <link rel="stylesheet" type="text/css" href="{% static 'poetry/css/vendor/bootstrap.min.css' %}" />
         <link rel="stylesheet" type="text/css" href="{% static 'poetry/css/styles.css' %}" />
-    {% endblock styling %}    
+    {% endblock styling %}
 </head>
-<body> 
+<body>
     <!-- Fixed navbar -->
     <nav class="navbar navbar-default navbar-fixed-top">
       <div class="container">
@@ -37,13 +37,13 @@
         <div class="col-md-3">
             <div class="well age-menu">
                 {% age_menu %}
-            </div>  
+            </div>
             <div class="last-added-poems-widget well">
                 {% last_added_poems %}
             </div>
             <div class="top-poems-widget well">
                 {% top_poems %}
-            </div>            
+            </div>
         </div>
         <div class="col-md-9 content">
             {% block content %}
@@ -73,6 +73,6 @@
               ga('send', 'pageview');
             </script>
         {% endif %}
-    {% endblock javascript %}    
+    {% endblock javascript %}
 </body>
 </html>

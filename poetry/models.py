@@ -2,6 +2,7 @@
 from .helpers import get_slug_data_for_letter, make_slug
 from django.contrib.auth.models import User
 from django.db import models
+from django.db.models import Q
 from tinymce.models import HTMLField
 
 
@@ -17,15 +18,10 @@ class Age(models.Model):
         return self.name
 
     def poets_with_count(self):
-        return Poet.objects.raw('''
-            SELECT
-                poet.id, poet.name, poet.slug, COUNT(poem.id) as poems_count
-            FROM 
-                poetry_poet as poet
-            LEFT JOIN poetry_poem as poem ON poet.id=poem.author_id AND poem.is_shown=1
-            WHERE poet.age_id=%s
-            GROUP BY poet.id
-        ''', [self.id])
+        return (Poet.objects
+                .filter(age=self.id)
+                .values('id', 'name', 'slug')
+                .annotate(poems_count=models.Count(models.Case(models.When(poem__is_shown=1, then=1)))))
 
 
 class Theme(models.Model):
@@ -66,15 +62,10 @@ class Poet(models.Model):
         return Poem.objects.filter(author_id = self.id, is_shown = 1)
 
     def poems_top(self):
-        return Poem.objects.raw('''
-            SELECT 
-                poem.id, poem.title, views.views_count
-            FROM 
-                poetry_poem as poem
-            LEFT JOIN poetry_view as views on views.poem_id=poem.id
-            WHERE poem.author_id=%s AND poem.is_shown=1
-            ORDER BY views.views_count DESC
-        ''', [self.id])
+        return (Poem.objects
+                .filter(is_shown=True, author_id=self.id)
+                .values('id', 'title', 'view__views_count')
+                .order_by('-view__views_count'))
 
     def save(self, *args, **kwargs):
         letters = get_slug_data_for_letter()

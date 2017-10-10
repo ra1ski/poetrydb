@@ -33,7 +33,7 @@ class LetterDetailView(generic.View):
         slug_data = get_slug_data_for_letter()
 
         try:
-            poets = Poet.objects.filter(letter = slug_data[letter_id.lower()], is_active = 1).order_by('name')
+            poets = Poet.objects.filter(letter=slug_data[letter_id.lower()], is_active=1).order_by('name')
         except Poet.ObjectDoesNotExist:
             raise Http404("Poll does not exist")
 
@@ -46,17 +46,17 @@ class PoemDetailView(generic.DetailView):
 
     def get(self, request, poet_id, slug_id, id):
         try:
-            poem = Poem.objects.get(id = id, author_id = poet_id)
+            poem = Poem.objects.get(id=id, author_id=poet_id)
 
             if poem.is_shown == 0 and (not request.user or request.user.id != poem.added_user_id):
                 raise Http404('Page not found')
         except Poem.DoesNotExist:
             raise Http404('Page not found')
 
-        view, created = View.objects.get_or_create(poem_id = poem.id)
+        view, created = View.objects.get_or_create(poem_id=poem.id)
         view.views_count = view.views_count + 1
         view.save()
-        poet = Poet.objects.get(id = poet_id)
+        poet = Poet.objects.get(id=poet_id)
 
         return render(request, self.template_name, {
             'poem': poem,
@@ -91,7 +91,7 @@ class ThemesDetailView(generic.DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(ThemesDetailView, self).get_context_data(**kwargs)
-        context['poems'] = Poem.objects.filter(theme__id = self.get_object().id, is_shown = 1)
+        context['poems'] = Poem.objects.filter(theme__id=self.get_object().id, is_shown=1)
 
         return context
 
@@ -117,9 +117,9 @@ class GenderListView(generic.ListView):
     def get(self, request, gender_id):
         gender = self.gender_list[gender_id]
         poets = (Poet.objects
-                 .filter(sex = gender['id'])
+                 .filter(sex=gender['id'])
                  .values('id', 'name', 'slug')
-                 .annotate(Count("id"), poems_count = Count('poem__id'))
+                 .annotate(Count("id"), poems_count=Count('poem__id'))
                  .order_by('name'))
 
         return render(request, self.template_name, {
@@ -134,14 +134,14 @@ class PoemsTopView(generic.ListView):
 
     def get_queryset(self):
         return (Poem.objects
-                .filter(is_shown = 1)
+                .filter(is_shown=1)
                 .values(
-                    'id',
-                    'title',
-                    'author__id',
-                    'author__name',
-                    'author__slug',
-                    'view__views_count')
+            'id',
+            'title',
+            'author__id',
+            'author__name',
+            'author__slug',
+            'view__views_count')
                 .order_by('-created_at')[:100])
 
 
@@ -152,12 +152,12 @@ class PoemsLastView(generic.ListView):
     def get_queryset(self):
         return (Poem.objects
                 .filter(
-                    is_shown = 1,
-                    author__is_active = 1)
+            is_shown=1,
+            author__is_active=1)
                 .values(
-                    'id',
-                    'title',
-                    'author__id',
-                    'author__name',
-                    'author__slug')
+            'id',
+            'title',
+            'author__id',
+            'author__name',
+            'author__slug')
                 .order_by('-created_at')[:100])

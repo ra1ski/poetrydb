@@ -14,12 +14,12 @@ error_messages = {'required': 'Толтыруға маңызды парамет�
 
 
 class UserAuthenticateForm(forms.ModelForm):
-    email = forms.EmailField(required = True, error_messages = error_messages)
+    email = forms.EmailField(required=True, error_messages=error_messages)
     password = forms.CharField(
-        required = True,
-        label = 'Құпиясөз',
-        error_messages = error_messages,
-        widget = forms.PasswordInput)
+        required=True,
+        label='Құпиясөз',
+        error_messages=error_messages,
+        widget=forms.PasswordInput)
 
     class Meta:
         model = User
@@ -31,19 +31,19 @@ class UserAuthenticateForm(forms.ModelForm):
 
 
 class UserCreateForm(UserCreationForm):
-    email = forms.EmailField(required = True, error_messages = error_messages)
-    full_name = forms.CharField(required = True, label = 'Есіміңіз', error_messages = error_messages)
-    password1 = forms.CharField(required = True, label = 'Құпиясөз', widget = forms.PasswordInput,
-                                error_messages = error_messages)
-    password2 = forms.CharField(required = True, label = 'Құпиясөзді қайталаңыз', widget = forms.PasswordInput,
-                                error_messages = error_messages)
+    email = forms.EmailField(required=True, error_messages=error_messages)
+    full_name = forms.CharField(required=True, label='Есіміңіз', error_messages=error_messages)
+    password1 = forms.CharField(required=True, label='Құпиясөз', widget=forms.PasswordInput,
+                                error_messages=error_messages)
+    password2 = forms.CharField(required=True, label='Құпиясөзді қайталаңыз', widget=forms.PasswordInput,
+                                error_messages=error_messages)
 
     class Meta:
         model = User
         fields = ('full_name', 'email', 'password1', 'password2')
 
-    def save(self, commit = True):
-        user = super(UserCreateForm, self).save(commit = False)
+    def save(self, commit=True):
+        user = super(UserCreateForm, self).save(commit=False)
         user.email = self.cleaned_data["email"]
         user.username = user.email
         user.is_active = 0
@@ -51,8 +51,8 @@ class UserCreateForm(UserCreationForm):
 
         if commit:
             user.save()
-            user.contributor = Contributor(user_id = user, full_name = self.cleaned_data["full_name"],
-                                           activation_code = hashlib.md5(hash.encode('utf-8')).hexdigest())
+            user.contributor = Contributor(user_id=user, full_name=self.cleaned_data["full_name"],
+                                           activation_code=hashlib.md5(hash.encode('utf-8')).hexdigest())
             user.contributor.save()
             group = self.get_user_group()
             user.groups.add(group)
@@ -62,11 +62,11 @@ class UserCreateForm(UserCreationForm):
         return user
 
     def get_user_group(self):
-        return Group.objects.get(name = 'site-users')
+        return Group.objects.get(name='site-users')
 
     def clean_email(self):
         email = self.cleaned_data.get('email')
-        user = User.objects.filter(email = email).first()
+        user = User.objects.filter(email=email).first()
 
         if user:
             raise forms.ValidationError("Бұл email-мен колднушы тіркелген.")
@@ -90,9 +90,9 @@ class UserCreateForm(UserCreationForm):
 
 class UserEditForm(forms.ModelForm):
     text_status = forms.CharField(
-        widget = forms.Textarea(attrs = {'rows': 5, 'cols': 100}),
-        label = 'Сайттағы статусыңыз (250 символ)',
-        error_messages = error_messages)
+        widget=forms.Textarea(attrs={'rows': 5, 'cols': 100}),
+        label='Сайттағы статусыңыз (250 символ)',
+        error_messages=error_messages)
 
     class Meta:
         model = Contributor
@@ -108,10 +108,10 @@ class UserEditForm(forms.ModelForm):
 
 class OfferPoemFrom(forms.ModelForm):
     theme = forms.MultipleChoiceField(
-        label = "Тақырып",
-        widget = forms.SelectMultiple,
-        error_messages = error_messages,
-        choices = Theme.objects.values_list('id', 'name').all()
+        label="Тақырып",
+        widget=forms.SelectMultiple,
+        error_messages=error_messages,
+        choices=Theme.objects.values_list('id', 'name').all()
     )
 
     class Meta:

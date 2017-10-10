@@ -1,5 +1,6 @@
 .idea
 __pycache__
+poetryproject/*
 poetryproject/settings/settings_production.py
 poetryproject/settings/settings_development.py
 envsettings

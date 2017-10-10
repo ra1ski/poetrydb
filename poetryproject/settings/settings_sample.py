@@ -1,5 +1,5 @@
 try:
-    from .settings import *
+    from poetryproject.settings import *
 except ImportError:
     pass
 
